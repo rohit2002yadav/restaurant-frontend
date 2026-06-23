@@ -6,16 +6,17 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 
 /* ────────────────────────────────────────────────────────────
-   TOKENS
+   DARK MODE TOKENS (default)
    ──────────────────────────────────────────────────────────── */
-:root {
-  /* Primary — warm amber/orange, restaurant feel */
+:root,
+[data-theme="dark"] {
+  /* Primary */
   --color-primary:        #f97316;
   --color-primary-hover:  #ea6c0a;
   --color-primary-light:  #fff7ed;
   --color-primary-muted:  rgba(249, 115, 22, 0.12);
 
-  /* Neutrals */
+  /* Backgrounds */
   --color-bg:             #0f172a;
   --color-bg-card:        rgba(30, 41, 59, 0.7);
   --color-bg-input:       rgba(15, 23, 42, 0.6);
@@ -40,6 +41,41 @@
   --color-info:           #3b82f6;
   --color-info-bg:        rgba(59, 130, 246, 0.1);
 
+  /* Orb opacities */
+  --orb-primary-opacity:  0.06;
+  --orb-purple-opacity:   0.05;
+}
+
+/* ────────────────────────────────────────────────────────────
+   LIGHT MODE TOKENS
+   ──────────────────────────────────────────────────────────── */
+[data-theme="light"] {
+  --color-bg:             #f8fafc;
+  --color-bg-card:        rgba(255, 255, 255, 0.85);
+  --color-bg-input:       rgba(248, 250, 252, 0.9);
+  --color-bg-hover:       rgba(0, 0, 0, 0.04);
+
+  --color-text:           #0f172a;
+  --color-text-muted:     #64748b;
+  --color-text-subtle:    #94a3b8;
+
+  --color-border:         rgba(0, 0, 0, 0.08);
+  --color-border-focus:   #f97316;
+
+  --color-success-bg:     rgba(34, 197, 94, 0.08);
+  --color-error-bg:       rgba(239, 68, 68, 0.08);
+  --color-warning-bg:     rgba(245, 158, 11, 0.08);
+  --color-info-bg:        rgba(59, 130, 246, 0.08);
+
+  --shadow-sm:            0 1px 3px rgba(0,0,0,0.08);
+  --shadow-md:            0 4px 16px rgba(0,0,0,0.10);
+
+  --orb-primary-opacity:  0.08;
+  --orb-purple-opacity:   0.06;
+}
+
+/* Shared tokens — same in both themes */
+:root {
   /* Spacing scale */
   --space-1:  4px;
   --space-2:  8px;
@@ -52,13 +88,13 @@
   --space-12: 48px;
 
   /* Radius */
-  --radius-sm:  8px;
-  --radius-md:  12px;
-  --radius-lg:  16px;
-  --radius-xl:  20px;
+  --radius-sm:   8px;
+  --radius-md:   12px;
+  --radius-lg:   16px;
+  --radius-xl:   20px;
   --radius-full: 9999px;
 
-  /* Shadows */
+  /* Shadows (dark defaults, overridden per theme above) */
   --shadow-sm:      0 1px 3px rgba(0,0,0,0.3);
   --shadow-md:      0 4px 16px rgba(0,0,0,0.4);
   --shadow-primary: 0 4px 20px rgba(249,115,22,0.25);
@@ -66,7 +102,7 @@
   /* Font */
   --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 
-  /* Transitions */
+  /* Transition */
   --transition: all 0.2s ease;
 }
 
@@ -100,7 +136,7 @@ body {
   width: 500px; height: 500px;
   border-radius: 50%;
   background: var(--color-primary);
-  opacity: 0.06;
+  opacity: var(--orb-primary-opacity);
   filter: blur(120px);
   top: -150px; right: -150px;
 }
@@ -110,7 +146,7 @@ body {
   width: 400px; height: 400px;
   border-radius: 50%;
   background: #7c3aed;
-  opacity: 0.05;
+  opacity: var(--orb-purple-opacity);
   filter: blur(120px);
   bottom: -100px; left: -100px;
 }

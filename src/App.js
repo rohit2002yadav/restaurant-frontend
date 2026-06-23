@@ -1,7 +1,9 @@
-import { BrowserRouter, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 import { AuthProvider, useAuth } from './context/AuthContext';
+import { ThemeProvider } from './context/ThemeContext';
 import { ToastContainer } from './components/ui/Toast';
+import ThemeToggle from './components/ui/ThemeToggle';
 
 import Login          from './pages/auth/Login';
 import Register       from './pages/auth/Register';
@@ -51,10 +53,13 @@ function AppRoutes() {
 export default function App() {
   return (
     <BrowserRouter>
-      <AuthProvider>
-        <ToastContainer />
-        <AppRoutes />
-      </AuthProvider>
+      <ThemeProvider>
+        <AuthProvider>
+          <ToastContainer />
+          <ThemeToggle style={{ position: 'fixed', bottom: 20, right: 20, zIndex: 1000 }} />
+          <AppRoutes />
+        </AuthProvider>
+      </ThemeProvider>
     </BrowserRouter>
   );
 }

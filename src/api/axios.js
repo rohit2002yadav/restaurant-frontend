@@ -59,6 +59,7 @@ export const queueAPI = {
 };
 
 export const restaurantAPI = {
+  getList:   ()   => api.get('/api/restaurants/'),
   getDetail: (id) => api.get(`/api/restaurants/${id}/`),
 };
 

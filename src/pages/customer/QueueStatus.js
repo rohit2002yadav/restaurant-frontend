@@ -5,7 +5,7 @@ import PageWrapper from '../../components/layout/PageWrapper';
 import Button from '../../components/ui/Button';
 import { queueAPI } from '../../api/axios';
 import { toast } from '../../components/ui/Toast';
-import { STATUS_LABELS, RESTAURANT_ID } from '../../utils/constants';
+import { STATUS_LABELS } from '../../utils/constants';
 
 const STATUS_BADGE = {
   waiting:   'badge-waiting',
@@ -18,7 +18,8 @@ const STATUS_BADGE = {
 
 export default function QueueStatus() {
   const navigate  = useNavigate();
-  const token     = localStorage.getItem('queueToken');
+  const token              = localStorage.getItem('queueToken');
+  const restaurantId        = localStorage.getItem('queueRestaurantId');
   const [data, setData]               = useState(null);
   const [loading, setLoading]         = useState(true);
   const [refreshing, setRefreshing]   = useState(false);
@@ -35,8 +36,8 @@ export default function QueueStatus() {
       setCountdown(30);
     } catch (err) {
       if (err.response?.status === 404) {
-        // Token no longer exists in DB (stale localStorage) — clear and redirect
         localStorage.removeItem('queueToken');
+        localStorage.removeItem('queueRestaurantId');
         navigate('/customer/home');
         return;
       }
@@ -57,8 +58,9 @@ export default function QueueStatus() {
   const handleLeave = async () => {
     setLeaving(true);
     try {
-      await queueAPI.leaveQueue({ token, restaurant_id: RESTAURANT_ID });
+      await queueAPI.leaveQueue({ token, restaurant_id: restaurantId });
       localStorage.removeItem('queueToken');
+      localStorage.removeItem('queueRestaurantId');
       toast('You have left the queue', 'info');
       navigate('/customer/home');
     } catch { toast('Failed to leave queue', 'error'); }
@@ -156,7 +158,7 @@ export default function QueueStatus() {
             <h3 style={{ fontWeight: 700, fontSize: '1.125rem', marginBottom: 16 }}>
               {entry?.status === 'completed' ? 'Visit complete!' : entry?.status === 'no_show' ? 'Marked as no-show' : 'Left queue'}
             </h3>
-            <Button onClick={() => { localStorage.removeItem('queueToken'); navigate('/customer/home'); }}>
+            <Button onClick={() => { localStorage.removeItem('queueToken'); localStorage.removeItem('queueRestaurantId'); navigate('/customer/home'); }}>
               Back to Home
             </Button>
           </div>

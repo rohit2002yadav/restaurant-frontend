@@ -1,5 +1,3 @@
-export const RESTAURANT_ID = 2;
-
 export const STATUS_LABELS = {
   waiting:   'Waiting',
   called:    'Called',

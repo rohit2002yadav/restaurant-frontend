@@ -1,41 +1,55 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { HiArrowLeft, HiUserGroup } from 'react-icons/hi';
 import PageWrapper from '../../components/layout/PageWrapper';
 import Button from '../../components/ui/Button';
 import { useAuth } from '../../context/AuthContext';
 import { queueAPI } from '../../api/axios';
 import { toast } from '../../components/ui/Toast';
-import { RESTAURANT_ID } from '../../utils/constants';
 
 const PARTY_OPTIONS = [
   { size: 1, label: '1',  desc: 'Solo',   emoji: '🧑' },
   { size: 2, label: '2',  desc: 'Couple', emoji: '👫' },
-  { size: 3, label: '3',  desc: 'Small',  emoji: '👨‍👩‍👦' },
-  { size: 4, label: '4',  desc: 'Family', emoji: '👨‍👩‍👧‍👦' },
+  { size: 3, label: '3',  desc: 'Small',  emoji: '👨👩👦' },
+  { size: 4, label: '4',  desc: 'Family', emoji: '👨👩👧👦' },
   { size: 5, label: '5',  desc: 'Group',  emoji: '🎉' },
   { size: 6, label: '6+', desc: 'Large',  emoji: '🎊' },
 ];
 
 export default function JoinQueue() {
-  const navigate    = useNavigate();
-  const { user }    = useAuth();
+  const navigate  = useNavigate();
+  const location  = useLocation();
+  const { user }  = useAuth();
+
+  // Read restaurant from navigation state — must be explicitly set by CustomerHome
+  const restaurant = location.state?.restaurant ?? null;
+
   const [partySize, setPartySize] = useState(null);
   const [loading, setLoading]     = useState(false);
   const [success, setSuccess]     = useState(null);
 
+  // Guard: if no restaurant in state, redirect back with message
+  useEffect(() => {
+    if (!restaurant) {
+      toast('Please select a restaurant first.', 'error');
+      navigate('/customer/home', { replace: true });
+    }
+  }, [restaurant, navigate]);
+
   const handleJoin = async () => {
-    if (!partySize) return;
+    if (!partySize || !restaurant) return;
     setLoading(true);
     try {
       const res  = await queueAPI.joinQueue({
         name:          user.name,
         phone:         user.phone,
         party_size:    partySize,
-        restaurant_id: RESTAURANT_ID,
+        restaurant_id: restaurant.id,
       });
       const data = res.data;
+      // Save both token AND restaurant id — QueueStatus needs restaurant_id for leave-queue
       localStorage.setItem('queueToken', data.token);
+      localStorage.setItem('queueRestaurantId', String(restaurant.id));
       setSuccess(data);
       setTimeout(() => navigate('/customer/status'), 2500);
     } catch (err) {
@@ -44,6 +58,9 @@ export default function JoinQueue() {
       setLoading(false);
     }
   };
+
+  // Don't render anything while redirect is pending
+  if (!restaurant) return null;
 
   if (success) {
     return (
@@ -56,6 +73,9 @@ export default function JoinQueue() {
           <div className="card anim-fade-up" style={{ width: '100%', maxWidth: 360, marginTop: 16 }}>
             <p className="gradient-text" style={{ fontSize: '2.5rem', fontWeight: 900, marginBottom: 4 }}>{success.token}</p>
             <p className="text-muted text-sm">Your token number</p>
+            <p style={{ color: 'var(--color-text-muted)', fontSize: '0.8125rem', marginTop: 6 }}>
+              {restaurant.name}
+            </p>
             {success.wait_time > 0 && (
               <p style={{ color: 'var(--color-primary)', fontWeight: 600, marginTop: 12 }}>~{success.wait_time} min wait</p>
             )}
@@ -83,8 +103,17 @@ export default function JoinQueue() {
           <HiArrowLeft size={16} /> Back
         </button>
 
+        {/* Selected restaurant confirmation */}
         <div style={{ marginBottom: 32 }}>
           <h1 style={{ fontSize: '1.5rem', fontWeight: 800, marginBottom: 6 }}>Join the Queue</h1>
+          <div style={{
+            display: 'inline-flex', alignItems: 'center', gap: 6,
+            background: 'var(--color-primary-muted)', color: 'var(--color-primary)',
+            borderRadius: 'var(--radius-full)', padding: '4px 12px',
+            fontSize: '0.8125rem', fontWeight: 600, marginBottom: 4,
+          }}>
+            🍽️ {restaurant.name}
+          </div>
           <p className="text-muted text-sm">Select your party size to get a token</p>
         </div>
 
@@ -106,8 +135,7 @@ export default function JoinQueue() {
                     borderRadius: 'var(--radius-lg)',
                     border: `2px solid ${selected ? 'var(--color-primary)' : 'var(--color-border)'}`,
                     background: selected ? 'var(--color-primary-muted)' : 'var(--color-bg-input)',
-                    cursor: 'pointer',
-                    textAlign: 'center',
+                    cursor: 'pointer', textAlign: 'center',
                     transition: 'var(--transition)',
                     boxShadow: selected ? 'var(--shadow-primary)' : 'none',
                     fontFamily: 'var(--font-sans)',

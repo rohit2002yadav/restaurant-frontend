@@ -1,4 +1,5 @@
 import { createContext, useContext, useState } from 'react';
+import axios from 'axios';
 
 const AuthContext = createContext(null);
 
@@ -16,7 +17,20 @@ export function AuthProvider({ children }) {
     }
   };
 
-  const logout = () => {
+  const logout = async () => {
+    const refresh = localStorage.getItem('refreshToken');
+    if (refresh) {
+      try {
+        // Blacklist the refresh token so it cannot be reused after logout
+        await axios.post(
+          'http://127.0.0.1:8000/api/auth/token/blacklist/',
+          { refresh },
+          { headers: { 'Content-Type': 'application/json' } }
+        );
+      } catch {
+        // Server unreachable or token already blacklisted — proceed anyway
+      }
+    }
     setUser(null);
     localStorage.removeItem('user');
     localStorage.removeItem('accessToken');

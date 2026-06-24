@@ -8,6 +8,7 @@ import ThemeToggle from './components/ui/ThemeToggle';
 import Login          from './pages/auth/Login';
 import Register       from './pages/auth/Register';
 import VerifyOTP      from './pages/auth/VerifyOTP';
+import Landing        from './pages/Landing';
 import CustomerHome   from './pages/customer/CustomerHome';
 import JoinQueue      from './pages/customer/JoinQueue';
 import QueueStatus    from './pages/customer/QueueStatus';
@@ -22,7 +23,7 @@ function ProtectedRoute({ children, role }) {
 
 function DefaultRedirect() {
   const { user } = useAuth();
-  if (!user) return <Navigate to="/login" replace />;
+  if (!user) return <Navigate to="/" replace />;
   return <Navigate to={user.role === 'admin' ? '/admin/dashboard' : '/customer/home'} replace />;
 }
 
@@ -31,6 +32,7 @@ function AppRoutes() {
     <AnimatePresence mode="wait">
       <Routes>
         {/* Public */}
+        <Route path="/"           element={<Landing />} />
         <Route path="/login"      element={<Login />} />
         <Route path="/register"   element={<Register />} />
         <Route path="/verify-otp" element={<VerifyOTP />} />

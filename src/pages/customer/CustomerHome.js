@@ -31,6 +31,8 @@ export default function CustomerHome() {
     { icon: HiTable, label: 'Available', value: restaurant ? restaurant.available_tables : '—',             color: '#4ade80' },
   ];
 
+  const handleLogout = async () => { await logout(); navigate('/login'); };
+
   return (
     <PageWrapper>
       <div style={{ maxWidth: 480, margin: '0 auto', padding: '32px 16px', minHeight: '100vh' }}>
@@ -41,7 +43,7 @@ export default function CustomerHome() {
             <p className="text-muted text-sm">Welcome back 👋</p>
             <h1 style={{ fontSize: '1.25rem', fontWeight: 700 }}>{user?.name}</h1>
           </div>
-          <button onClick={() => { logout(); navigate('/login'); }}
+          <button onClick={handleLogout}
             style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--color-text-muted)', padding: 8, borderRadius: 8 }}
             onMouseOver={e => e.currentTarget.style.color = 'var(--color-error)'}
             onMouseOut={e => e.currentTarget.style.color = 'var(--color-text-muted)'}>

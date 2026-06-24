@@ -35,6 +35,8 @@ export default function AdminDashboard() {
     return () => clearInterval(interval);
   }, [fetchDashboard]);
 
+  const handleLogout = async () => { await logout(); navigate('/login'); };
+
   const handleCall = async (queueEntryId, customerName) => {
     setActionLoading(`call-${queueEntryId}`);
     try {
@@ -81,7 +83,7 @@ export default function AdminDashboard() {
               style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--color-text-muted)', padding: 8, borderRadius: 8 }}>
               <HiRefresh size={20} style={{ animation: loading ? 'spin 1s linear infinite' : 'none' }} />
             </button>
-            <button onClick={() => { logout(); navigate('/login'); }}
+            <button onClick={handleLogout}
               style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--color-text-muted)', padding: 8, borderRadius: 8 }}
               onMouseOver={e => e.currentTarget.style.color = 'var(--color-error)'}
               onMouseOut={e => e.currentTarget.style.color = 'var(--color-text-muted)'}>

@@ -11,6 +11,33 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
+// Auto-retry once on 401 by refreshing the access token
+api.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    const original = error.config;
+    if (error.response?.status === 401 && !original._retry) {
+      original._retry = true;
+      const refresh = localStorage.getItem('refreshToken');
+      if (!refresh) {
+        localStorage.clear();
+        window.location.href = '/login';
+        return Promise.reject(error);
+      }
+      try {
+        const res = await axios.post('http://127.0.0.1:8000/api/auth/token/refresh/', { refresh });
+        localStorage.setItem('accessToken', res.data.access);
+        original.headers.Authorization = `Bearer ${res.data.access}`;
+        return api(original);
+      } catch {
+        localStorage.clear();
+        window.location.href = '/login';
+      }
+    }
+    return Promise.reject(error);
+  }
+);
+
 export const authAPI = {
   adminRegister:    (data) => api.post('/api/auth/admin/register/', data),
   customerRegister: (data) => api.post('/api/auth/customer/register/', data),

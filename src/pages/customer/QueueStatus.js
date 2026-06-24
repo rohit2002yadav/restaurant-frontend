@@ -33,7 +33,13 @@ export default function QueueStatus() {
       const res = await queueAPI.getStatus(token);
       setData(res.data);
       setCountdown(30);
-    } catch {
+    } catch (err) {
+      if (err.response?.status === 404) {
+        // Token no longer exists in DB (stale localStorage) — clear and redirect
+        localStorage.removeItem('queueToken');
+        navigate('/customer/home');
+        return;
+      }
       toast('Could not fetch status', 'error');
     } finally { setLoading(false); setRefreshing(false); }
   }, [token, navigate]);

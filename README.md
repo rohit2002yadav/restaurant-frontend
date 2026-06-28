@@ -1,70 +1,112 @@
-# Getting Started with Create React App
+# QueueEat Frontend
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A modern React frontend for the **Restaurant Queue Management System**, allowing customers to join restaurant queues virtually and track their waiting status in real time.
 
-## Available Scripts
+## Features
 
-In the project directory, you can run:
+- Customer Registration & Login
+- JWT Authentication
+- Restaurant Selection
+- Join Virtual Queue
+- Live Queue Status
+- Leave Queue
+- Responsive UI
+- Dark Theme
 
-### `npm start`
+## Tech Stack
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- React.js
+- React Router
+- Axios
+- CSS3
+- JWT Authentication
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Project Structure
 
-### `npm test`
+```
+src/
+│
+├── api/
+├── components/
+├── context/
+├── pages/
+│   ├── auth/
+│   ├── customer/
+│   └── admin/
+├── utils/
+└── App.js
+```
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Getting Started
 
-### `npm run build`
+### Clone the repository
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+```bash
+git clone https://github.com/rohit2002yadav/restaurant-frontend.git
+cd restaurant-frontend
+```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### Install dependencies
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+```bash
+npm install
+```
 
-### `npm run eject`
+### Start the development server
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+```bash
+npm start
+```
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+The application will run at:
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+```
+http://localhost:3000
+```
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+## Backend Repository
 
-## Learn More
+The frontend communicates with the Django REST backend.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+Backend Repository:
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+https://github.com/rohit2002yadav/restaurant-queue-management
 
-### Code Splitting
+## Main Customer Flow
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+1. Register/Login
+2. Select a Restaurant
+3. View Restaurant Details
+4. Join Queue
+5. Receive Queue Token
+6. Track Queue Status
+7. Leave Queue (optional)
 
-### Analyzing the Bundle Size
+## Admin Features
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+- Restaurant Dashboard
+- View Queue
+- Call Next Customer
+- Assign Tables
+- Clear Tables
+- Monitor Queue Statistics
 
-### Making a Progressive Web App
+## Screenshots
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+(Add screenshots here)
 
-### Advanced Configuration
+## Future Improvements
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+- QR Code based restaurant selection
+- Real-time queue updates using WebSockets
+- Push notifications
+- Online table reservation
+- Analytics Dashboard
 
-### Deployment
+## Author
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+**Rohit Yadav**
 
-### `npm run build` fails to minify
+M.Sc. Computer Science
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+```

@@ -465,6 +465,74 @@ body {
 .anim-fade-up:nth-child(4) { animation-delay: 0.21s; }
 
 /* ────────────────────────────────────────────────────────────
+   STEPPER
+   ──────────────────────────────────────────────────────────── */
+.stepper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  margin-bottom: var(--space-6);
+}
+.stepper-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  flex: 1;
+  position: relative;
+}
+/* connector line between steps */
+.stepper-step:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  top: 14px;
+  left: calc(50% + 14px);
+  right: calc(-50% + 14px);
+  height: 2px;
+  background: var(--color-border);
+  z-index: 0;
+}
+.stepper-step.done:not(:last-child)::after {
+  background: var(--color-success);
+}
+.stepper-dot {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.75rem; font-weight: 700;
+  border: 2px solid var(--color-border);
+  background: var(--color-bg-input);
+  color: var(--color-text-muted);
+  position: relative; z-index: 1;
+  transition: var(--transition);
+}
+.stepper-step.done .stepper-dot {
+  background: var(--color-success);
+  border-color: var(--color-success);
+  color: #fff;
+}
+.stepper-step.active .stepper-dot {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  color: #fff;
+  box-shadow: 0 0 0 4px var(--color-primary-muted);
+}
+.stepper-label {
+  font-size: 0.625rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-text-subtle);
+  text-align: center;
+  white-space: nowrap;
+}
+.stepper-step.done .stepper-label,
+.stepper-step.active .stepper-label {
+  color: var(--color-text-muted);
+}
+
+/* ────────────────────────────────────────────────────────────
    DIVIDER
    ──────────────────────────────────────────────────────────── */
 .divider {

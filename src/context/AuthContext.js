@@ -1,5 +1,6 @@
 import { createContext, useContext, useState } from 'react';
 import axios from 'axios';
+import { API_BASE_URL } from '../api/axios';
 
 const AuthContext = createContext(null);
 
@@ -23,7 +24,7 @@ export function AuthProvider({ children }) {
       try {
         // Blacklist the refresh token so it cannot be reused after logout
         await axios.post(
-          'http://127.0.0.1:8000/api/auth/token/blacklist/',
+          `${API_BASE_URL}/api/auth/token/blacklist/`,
           { refresh },
           { headers: { 'Content-Type': 'application/json' } }
         );
@@ -36,6 +37,7 @@ export function AuthProvider({ children }) {
     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');
     localStorage.removeItem('queueToken');
+    localStorage.removeItem('queueRestaurantId');
     localStorage.removeItem('pendingEmail');
     localStorage.removeItem('pendingRole');
   };

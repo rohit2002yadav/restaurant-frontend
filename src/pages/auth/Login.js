@@ -6,7 +6,7 @@ import Input from '../../components/ui/Input';
 import Button from '../../components/ui/Button';
 import { useAuth } from '../../context/AuthContext';
 import { toast } from '../../components/ui/Toast';
-import { authAPI } from '../../api/axios';
+import { authAPI, restaurantAPI } from '../../api/axios';
 
 export default function Login() {
   const navigate = useNavigate();
@@ -33,7 +33,19 @@ export default function Login() {
       const data = res.data;
       login(data.user, data.tokens);
       toast('Welcome back!', 'success');
-      navigate(data.user.role === 'admin' ? '/admin/dashboard' : '/customer/home');
+      if (data.user.role === 'admin') {
+        // Check if restaurant has tables — redirect to setup wizard if not
+        try {
+          const tablesRes = await restaurantAPI.getTables(data.user.restaurant_id);
+          if (tablesRes.data.length === 0) {
+            navigate('/admin/setup');
+            return;
+          }
+        } catch { /* if check fails, go to dashboard anyway */ }
+        navigate('/admin/dashboard');
+      } else {
+        navigate('/customer/home');
+      }
     } catch (err) {
       const errData = err.response?.data;
       if (errData?.needs_verification) {
@@ -100,6 +112,12 @@ export default function Login() {
                 Sign In
               </Button>
             </form>
+
+            <div className="text-center mt-4">
+              <Link to="/forgot-password" style={{ color: 'var(--color-text-muted)', fontSize: '0.8125rem', textDecoration: 'none' }}>
+                Forgot password?
+              </Link>
+            </div>
           </div>
 
           <p className="text-center text-muted text-sm mt-6">

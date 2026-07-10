@@ -4,6 +4,7 @@ import {
   HiRefresh, HiLogout, HiClock, HiUsers,
   HiChat, HiCheckCircle, HiOfficeBuilding, HiPhone, HiLocationMarker,
 } from 'react-icons/hi';
+import { useAuth } from '../../context/AuthContext';
 import PageWrapper from '../../components/layout/PageWrapper';
 import Button from '../../components/ui/Button';
 import { queueAPI } from '../../api/axios';
@@ -106,6 +107,7 @@ function ProgressStepper({ status, calledAt }) {
 
 export default function QueueStatus() {
   const navigate     = useNavigate();
+  const { logout }   = useAuth();
   const token        = localStorage.getItem('queueToken');
   const restaurantId = localStorage.getItem('queueRestaurantId');
 
@@ -162,6 +164,7 @@ export default function QueueStatus() {
   };
 
   const goHome = () => navigate('/customer/home');
+  const handleLogout = async () => { await logout(); navigate('/login'); };
 
   // ── loading ──
   if (loading) return (
@@ -202,12 +205,20 @@ export default function QueueStatus() {
               {dining_info?.restaurant_name ?? 'Your Visit'}
             </h1>
           </div>
-          {isActive && (
-            <button onClick={() => fetchStatus(true)}
-              style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--color-text-muted)', padding: 8, borderRadius: 8, animation: refreshing ? 'spin 0.7s linear infinite' : 'none' }}>
-              <HiRefresh size={20} />
+          <div style={{ display: 'flex', gap: 4 }}>
+            {isActive && (
+              <button onClick={() => fetchStatus(true)}
+                style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--color-text-muted)', padding: 8, borderRadius: 8, animation: refreshing ? 'spin 0.7s linear infinite' : 'none' }}>
+                <HiRefresh size={20} />
+              </button>
+            )}
+            <button onClick={handleLogout}
+              style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--color-text-muted)', padding: 8, borderRadius: 8 }}
+              onMouseOver={e => e.currentTarget.style.color = 'var(--color-error)'}
+              onMouseOut={e => e.currentTarget.style.color = 'var(--color-text-muted)'}>
+              <HiLogout size={20} />
             </button>
-          )}
+          </div>
         </div>
 
         {/* ── Progress Stepper ── */}

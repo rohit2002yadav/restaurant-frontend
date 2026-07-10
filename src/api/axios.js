@@ -1,7 +1,9 @@
 import axios from 'axios';
 
+export const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://127.0.0.1:8000';
+
 const api = axios.create({
-  baseURL: 'http://127.0.0.1:8000',
+  baseURL: API_BASE_URL,
   headers: { 'Content-Type': 'application/json' },
 });
 
@@ -25,7 +27,7 @@ api.interceptors.response.use(
         return Promise.reject(error);
       }
       try {
-        const res = await axios.post('http://127.0.0.1:8000/api/auth/token/refresh/', { refresh });
+        const res = await axios.post(`${API_BASE_URL}/api/auth/token/refresh/`, { refresh });
         localStorage.setItem('accessToken', res.data.access);
         original.headers.Authorization = `Bearer ${res.data.access}`;
         return api(original);
@@ -46,27 +48,32 @@ export const authAPI = {
   resendOTP:        (data) => api.post('/api/auth/resend-otp/', data),
   profile:          ()     => api.get('/api/auth/profile/'),
   refreshToken:     (data) => api.post('/api/auth/token/refresh/', data),
+  requestPasswordReset: (data) => api.post('/api/auth/request-password-reset/', data),
+  resetPassword:        (data) => api.post('/api/auth/reset-password/', data),
 };
 
 export const queueAPI = {
-  joinQueue:          (data) => api.post('/api/queue/join-queue/', data),
-  getStatus:          (token) => api.get(`/api/queue/queue-status/${token}/`),
-  leaveQueue:         (data) => api.post('/api/queue/leave-queue/', data),
-  getRestaurantQueue: (id) => api.get(`/api/queue/restaurant-queue/${id}/`),
-  staffDashboard:     (id) => api.get(`/api/queue/staff-dashboard/${id}/`),
-  callCustomer:       (data) => api.post('/api/queue/call-customer/', data),
-  clearTable:         (data) => api.post('/api/queue/clear-table/', data),
+  joinQueue:      (data)  => api.post('/api/queue/join-queue/', data),
+  getStatus:      (token) => api.get(`/api/queue/queue-status/${token}/`),
+  leaveQueue:     (data)  => api.post('/api/queue/leave-queue/', data),
+  staffDashboard: (id)    => api.get(`/api/queue/staff-dashboard/${id}/`),
+  callCustomer:   (data)  => api.post('/api/queue/call-customer/', data),
+  seatCustomer:   (data)  => api.post('/api/queue/seat-customer/', data),
+  clearTable:     (data)  => api.post('/api/queue/clear-table/', data),
+  myActiveQueue:  ()      => api.get('/api/queue/my-active-queue/'),
 };
 
 export const restaurantAPI = {
-  getList:   ()   => api.get('/api/restaurants/'),
-  getDetail: (id) => api.get(`/api/restaurants/${id}/`),
+  getList:      ()           => api.get('/api/restaurants/'),
+  getDetail:    (id)         => api.get(`/api/restaurants/${id}/`),
+  getTables:    (id)         => api.get(`/api/restaurants/${id}/tables/`),
+  bulkCreate:   (id, tables) => api.post(`/api/restaurants/${id}/tables/bulk-create/`, { tables }),
+  updateTable:  (tableId, capacity) => api.patch(`/api/restaurants/tables/${tableId}/`, { capacity }),
+  deleteTable:  (tableId)   => api.delete(`/api/restaurants/tables/${tableId}/`),
 };
 
-export const orderAPI = {
-  getMenu:     (restaurantId) => api.get(`/api/orders/menu/${restaurantId}/`),
-  createOrder: (data) => api.post('/api/orders/create/', data),
-  getOrder:    (id) => api.get(`/api/orders/${id}/`),
+export const notificationsAPI = {
+  submitFeedback: (data) => api.post('/api/notifications/feedback/', data),
 };
 
 export default api;

@@ -38,6 +38,10 @@ export default function JoinQueue() {
 
   const handleJoin = async () => {
     if (!partySize || !restaurant) return;
+    if (!user.phone) {
+      toast('Your account has no phone number. Please contact support to update your profile before joining a queue.', 'error');
+      return;
+    }
     setLoading(true);
     try {
       const res  = await queueAPI.joinQueue({
